@@ -378,10 +378,6 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-
   html {
     @apply font-sans antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -394,9 +390,4 @@
     font-size: var(--text-base);
     line-height: 1.6;
   }
-}
-
-#root {
-  @apply w-full mx-auto min-h-screen flex flex-col px-4 sm:px-6 lg:px-8;
-  max-width: 1280px;
 }
