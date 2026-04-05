@@ -5,7 +5,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Map semantic tokens to Tailwind theme (HSL components on :root; dark values under prefers-color-scheme) */
+/* Map semantic tokens to Tailwind theme (HSL on :root; dark values when html.dark from next-themes) */
 @theme {
   --font-sans: 'Geist Variable', system-ui, -apple-system, sans-serif;
   --font-heading: var(--font-sans);
@@ -248,9 +248,8 @@
     color-scheme: light;
   }
 
-  /* Dark palette when the OS / browser is set to dark mode */
-  @media (prefers-color-scheme: dark) {
-    :root {
+  /* Dark palette when theme resolves to dark (class on html) */
+  html.dark {
     /* ===== SHADCN TOKENS ===== */
     --background: 224 25% 9%;
     --foreground: 210 20% 88%;
@@ -403,7 +402,6 @@
     --color-skeleton-shimmer: 222 18% 20%;
 
     color-scheme: dark;
-    }
   }
   * {
     @apply border-border outline-ring/50;

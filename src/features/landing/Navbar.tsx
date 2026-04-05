@@ -2,6 +2,7 @@ import { motion } from "framer-motion"
 import { MessageCircle } from "lucide-react"
 import { Link } from "react-router-dom"
 
+import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -35,7 +36,8 @@ export default function Navbar() {
           </motion.div>
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle className="text-muted-foreground hover:text-foreground" />
           <Button variant="ghost" className="text-muted-foreground hover:text-foreground" asChild>
             <Link to="/login">Log in</Link>
           </Button>

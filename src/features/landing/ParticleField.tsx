@@ -33,6 +33,13 @@ export default function ParticleField() {
       if (parsed) particleHslRef.current = parsed
     }
     syncParticleFill()
+
+    const root = document.documentElement
+    const observer = new MutationObserver(() => {
+      syncParticleFill()
+    })
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] })
+
     const mq = window.matchMedia("(prefers-color-scheme: dark)")
     mq.addEventListener("change", syncParticleFill)
 
@@ -101,6 +108,7 @@ export default function ParticleField() {
     draw()
 
     return () => {
+      observer.disconnect()
       mq.removeEventListener("change", syncParticleFill)
       cancelAnimationFrame(animId)
       window.removeEventListener("resize", resize)

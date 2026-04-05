@@ -2,6 +2,7 @@ import { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Link } from "react-router-dom"
 
+import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 
 import { SendOtpStep, SignupStep, VerifyOtpStep } from "./components"
@@ -24,7 +25,10 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-8 px-4 py-12">
+    <div className="relative flex min-h-screen flex-col items-center justify-center gap-8 px-4 py-12">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="text-center">
         <h1 className="text-2xl font-semibold tracking-tight">Sign up</h1>
         <p className="text-muted-foreground mt-1 text-sm">A few quick steps to get started</p>

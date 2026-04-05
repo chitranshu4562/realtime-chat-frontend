@@ -2,11 +2,16 @@ import { Toaster as Sonner, type ToasterProps } from "sonner"
 
 import { cn } from "@/lib/utils"
 
-export function Toaster({ className, toastOptions, ...props }: ToasterProps) {
+export function Toaster({
+  className,
+  toastOptions,
+  theme = "light",
+  ...props
+}: ToasterProps) {
   return (
     <Sonner
       className={cn("toaster group", className)}
-      theme="system"
+      theme={theme}
       toastOptions={{
         ...toastOptions,
         classNames: {

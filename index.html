@@ -5,6 +5,24 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>realtime-chat-frontend</title>
+    <script>
+      (function () {
+        var storageKey = __THEME_STORAGE_KEY__
+        var defaultTheme = "system"
+        try {
+          var stored = localStorage.getItem(storageKey)
+          var theme = stored || defaultTheme
+          if (theme === "system") {
+            theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+          }
+          var root = document.documentElement
+          root.classList.remove("light", "dark")
+          root.classList.add(theme)
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

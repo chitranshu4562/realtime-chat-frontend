@@ -1,4 +1,4 @@
-/* Lumina-style landing: scoped tokens (CSS module). Light by default; dark when OS prefers dark. */
+/* Lumina-style landing: scoped tokens (CSS module). Light by default; dark when html.dark (theme toggle). */
 
 @keyframes landing-pulse-glow {
   0%,
@@ -65,8 +65,7 @@
 }
 
 /* ----- Dark cinematic (original Lumina look) ----- */
-@media (prefers-color-scheme: dark) {
-  .root {
+:global(html.dark) .root {
     --background: 222 47% 6%;
     --foreground: 210 40% 96%;
     --card: 222 47% 9%;
@@ -112,7 +111,6 @@
     --landing-particle-fill: 199 89% 48%;
 
     color-scheme: dark;
-  }
 }
 
 .textGradient {
