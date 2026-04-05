@@ -3,6 +3,9 @@ import { MessageCircle } from "lucide-react"
 import { Link } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
+
+import styles from "./landing-page.module.css"
 
 export default function Navbar() {
   return (
@@ -10,7 +13,7 @@ export default function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="glass-strong fixed top-0 right-0 left-0 z-50"
+      className={cn(styles.glassStrong, "fixed top-0 right-0 left-0 z-50")}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-2">
@@ -18,11 +21,16 @@ export default function Navbar() {
             className="flex items-center gap-2"
             whileHover={{ scale: 1.05 }}
           >
-            <div className="bg-gradient-primary flex h-9 w-9 items-center justify-center rounded-lg">
+            <div
+              className={cn(
+                styles.bgGradientPrimary,
+                "flex h-9 w-9 items-center justify-center rounded-lg",
+              )}
+            >
               <MessageCircle className="text-primary-foreground h-5 w-5" />
             </div>
             <span className="font-heading text-foreground text-xl font-bold">
-              Realtime<span className="text-gradient">Chat</span>
+              Realtime<span className={styles.textGradient}>Chat</span>
             </span>
           </motion.div>
         </Link>
@@ -32,7 +40,11 @@ export default function Navbar() {
             <Link to="/login">Log in</Link>
           </Button>
           <Button
-            className="bg-gradient-primary font-semibold text-primary-foreground glow transition-opacity hover:opacity-90"
+            className={cn(
+              styles.bgGradientPrimary,
+              styles.glow,
+              "font-semibold text-primary-foreground transition-opacity hover:opacity-90",
+            )}
             asChild
           >
             <Link to="/signup">Sign up free</Link>

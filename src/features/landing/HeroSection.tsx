@@ -3,15 +3,25 @@ import { ArrowRight, Zap } from "lucide-react"
 import { Link } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 import FloatingBubbles from "./FloatingBubbles.tsx"
+import styles from "./landing-page.module.css"
 
 export default function HeroSection() {
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden pt-16">
-      <div className="animate-pulse-glow absolute top-1/4 left-1/4 h-[500px] w-[500px] rounded-full bg-primary/10 blur-[120px]" />
       <div
-        className="animate-pulse-glow absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-secondary/10 blur-[100px]"
+        className={cn(
+          styles.animatePulseGlow,
+          "absolute top-1/4 left-1/4 h-[500px] w-[500px] rounded-full bg-primary/10 blur-[120px]",
+        )}
+      />
+      <div
+        className={cn(
+          styles.animatePulseGlow,
+          "absolute right-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-secondary/10 blur-[100px]",
+        )}
         style={{ animationDelay: "1.5s" }}
       />
 
@@ -23,7 +33,10 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="glass text-muted-foreground mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm"
+            className={cn(
+              styles.glass,
+              "text-muted-foreground mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm",
+            )}
           >
             <Zap className="text-accent h-4 w-4" />
             <span>Real-time messaging, reimagined</span>
@@ -37,7 +50,7 @@ export default function HeroSection() {
           >
             Chat at the
             <br />
-            <span className="text-gradient">speed of thought</span>
+            <span className={styles.textGradient}>speed of thought</span>
           </motion.h1>
 
           <motion.p
@@ -58,7 +71,11 @@ export default function HeroSection() {
           >
             <Button
               size="lg"
-              className="bg-gradient-primary group h-auto px-8 py-6 text-lg font-semibold text-primary-foreground glow-lg transition-all hover:opacity-90"
+              className={cn(
+                styles.bgGradientPrimary,
+                styles.glowLg,
+                "group h-auto px-8 py-6 text-lg font-semibold text-primary-foreground transition-all hover:opacity-90",
+              )}
               asChild
             >
               <Link to="/signup">
@@ -80,7 +97,12 @@ export default function HeroSection() {
               { value: "99.9%", label: "Uptime" },
             ].map((stat) => (
               <div key={stat.label}>
-                <div className="font-heading text-gradient text-2xl font-bold sm:text-3xl">
+                <div
+                  className={cn(
+                    styles.textGradient,
+                    "font-heading text-2xl font-bold sm:text-3xl",
+                  )}
+                >
                   {stat.value}
                 </div>
                 <div className="text-muted-foreground mt-1 text-xs sm:text-sm">

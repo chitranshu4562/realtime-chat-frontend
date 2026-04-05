@@ -1,13 +1,40 @@
 import { useEffect, useRef } from "react"
 
+/** Reads `H S% L%` from `--landing-particle-fill` on the canvas (inherited from landing `.root`). */
+function parseLandingParticleFill(value: string): {
+  h: number
+  s: number
+  l: number
+} | null {
+  const parts = value.trim().split(/\s+/)
+  if (parts.length < 3) return null
+  const h = Number(parts[0])
+  const s = Number.parseFloat(parts[1]!)
+  const l = Number.parseFloat(parts[2]!)
+  if (!Number.isFinite(h) || !Number.isFinite(s) || !Number.isFinite(l)) {
+    return null
+  }
+  return { h, s, l }
+}
+
 export default function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const particleHslRef = useRef({ h: 232, s: 72, l: 52 })
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext("2d")
     if (!ctx) return
+
+    const syncParticleFill = () => {
+      const raw = getComputedStyle(canvas).getPropertyValue("--landing-particle-fill")
+      const parsed = parseLandingParticleFill(raw)
+      if (parsed) particleHslRef.current = parsed
+    }
+    syncParticleFill()
+    const mq = window.matchMedia("(prefers-color-scheme: dark)")
+    mq.addEventListener("change", syncParticleFill)
 
     let animId: number
     const particles: {
@@ -38,6 +65,7 @@ export default function ParticleField() {
     }
 
     const draw = () => {
+      const { h, s, l } = particleHslRef.current
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       particles.forEach((p) => {
         p.x += p.vx
@@ -49,7 +77,7 @@ export default function ParticleField() {
 
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fillStyle = `hsla(199, 89%, 48%, ${p.opacity})`
+        ctx.fillStyle = `hsla(${h}, ${s}%, ${l}%, ${p.opacity})`
         ctx.fill()
       })
 
@@ -62,7 +90,7 @@ export default function ParticleField() {
             ctx.beginPath()
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.strokeStyle = `hsla(199, 89%, 48%, ${0.08 * (1 - dist / 150)})`
+            ctx.strokeStyle = `hsla(${h}, ${s}%, ${l}%, ${0.08 * (1 - dist / 150)})`
             ctx.lineWidth = 0.5
             ctx.stroke()
           }
@@ -73,6 +101,7 @@ export default function ParticleField() {
     draw()
 
     return () => {
+      mq.removeEventListener("change", syncParticleFill)
       cancelAnimationFrame(animId)
       window.removeEventListener("resize", resize)
     }

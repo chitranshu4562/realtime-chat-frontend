@@ -1,6 +1,10 @@
 import { motion } from "framer-motion"
 import { Lock, Sparkles, Users, Zap } from "lucide-react"
 
+import { cn } from "@/lib/utils"
+
+import styles from "./landing-page.module.css"
+
 const features = [
   {
     icon: Zap,
@@ -40,7 +44,7 @@ export default function FeaturesSection() {
           className="mb-16 text-center"
         >
           <h2 className="font-heading mb-4 text-3xl font-bold sm:text-4xl md:text-5xl">
-            Why <span className="text-gradient">RealtimeChat</span>?
+            Why <span className={styles.textGradient}>RealtimeChat</span>?
           </h2>
           <p className="text-muted-foreground mx-auto max-w-xl text-lg">
             Built for speed, designed for humans.
@@ -56,9 +60,18 @@ export default function FeaturesSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              className="glass group cursor-default rounded-2xl p-6 sm:p-8"
+              className={cn(
+                styles.featureCard,
+                styles.glass,
+                "cursor-default rounded-2xl p-6 sm:p-8",
+              )}
             >
-              <div className="bg-muted group-hover:glow mb-5 flex h-12 w-12 items-center justify-center rounded-xl transition-shadow">
+              <div
+                className={cn(
+                  styles.featureIcon,
+                  "bg-muted mb-5 flex h-12 w-12 items-center justify-center rounded-xl",
+                )}
+              >
                 <f.icon className={`h-6 w-6 ${f.color}`} />
               </div>
               <h3 className="font-heading text-foreground mb-2 text-xl font-semibold">

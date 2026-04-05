@@ -1,5 +1,9 @@
 import { motion } from "framer-motion"
 
+import { cn } from "@/lib/utils"
+
+import styles from "./landing-page.module.css"
+
 const messages = [
   { text: "Hey! Have you tried RealtimeChat? 🚀", sender: "left", delay: 0 },
   { text: "Not yet, is it any good?", sender: "right", delay: 0.8 },
@@ -21,7 +25,7 @@ export default function ChatPreview() {
           className="mb-12 text-center"
         >
           <h2 className="font-heading text-3xl font-bold sm:text-4xl md:text-5xl">
-            See it <span className="text-gradient-accent">in action</span>
+            See it <span className={styles.textGradientAccent}>in action</span>
           </h2>
         </motion.div>
 
@@ -30,10 +34,14 @@ export default function ChatPreview() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="glass-strong glow-lg mx-auto max-w-md rounded-3xl p-6"
+          className={cn(
+            styles.glassStrong,
+            styles.glowLg,
+            "mx-auto max-w-md rounded-3xl p-6",
+          )}
         >
           <div className="border-border/50 mb-4 flex items-center gap-3 border-b pb-4">
-            <div className="bg-gradient-primary h-10 w-10 rounded-full" />
+            <div className={cn(styles.bgGradientPrimary, "h-10 w-10 rounded-full")} />
             <div>
               <div className="font-heading text-foreground text-sm font-semibold">
                 Sarah
@@ -53,11 +61,15 @@ export default function ChatPreview() {
                 className={`flex ${msg.sender === "right" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm ${
+                  className={cn(
+                    "max-w-[75%] rounded-2xl px-4 py-2.5 text-sm",
                     msg.sender === "right"
-                      ? "bg-gradient-primary text-primary-foreground rounded-br-md"
-                      : "bg-muted text-foreground rounded-bl-md"
-                  }`}
+                      ? cn(
+                          styles.bgGradientPrimary,
+                          "text-primary-foreground rounded-br-md",
+                        )
+                      : "bg-muted text-foreground rounded-bl-md",
+                  )}
                 >
                   {msg.text}
                 </div>
@@ -71,7 +83,12 @@ export default function ChatPreview() {
                 Type a message...
               </span>
             </div>
-            <div className="bg-gradient-primary flex h-10 w-10 items-center justify-center rounded-full">
+            <div
+              className={cn(
+                styles.bgGradientPrimary,
+                "flex h-10 w-10 items-center justify-center rounded-full",
+              )}
+            >
               <svg
                 className="text-primary-foreground h-4 w-4"
                 fill="none"

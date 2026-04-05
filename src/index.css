@@ -7,7 +7,7 @@
 
 /* Map semantic tokens to Tailwind theme (HSL components on :root; dark values under prefers-color-scheme) */
 @theme {
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Geist Variable', system-ui, -apple-system, sans-serif;
   --font-heading: var(--font-sans);
 
   /* Global multiplier for all --text-* sizes; override on :root (e.g. 1.125, 0.9). */
@@ -428,103 +428,5 @@
     @apply m-0 bg-background text-foreground min-h-screen;
     font-size: var(--text-base);
     line-height: 1.6;
-  }
-}
-
-/* Landing page (Lumina-style): scoped tokens + utilities */
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-.landing-page {
-  --background: 222 47% 6%;
-  --foreground: 210 40% 96%;
-  --card: 222 47% 9%;
-  --card-foreground: 210 40% 96%;
-  --popover: 222 47% 9%;
-  --popover-foreground: 210 40% 96%;
-  --primary: 199 89% 48%;
-  --primary-foreground: 222 47% 6%;
-  --secondary: 260 60% 55%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 222 30% 14%;
-  --muted-foreground: 215 20% 55%;
-  --accent: 170 80% 45%;
-  --accent-foreground: 222 47% 6%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 222 30% 18%;
-  --input: 222 30% 18%;
-  --ring: 199 89% 48%;
-  --sidebar-background: 222 47% 8%;
-  --sidebar-foreground: 210 40% 96%;
-  --sidebar-primary: 199 89% 48%;
-  --sidebar-primary-foreground: 222 47% 6%;
-  --sidebar-accent: 222 30% 14%;
-  --sidebar-accent-foreground: 210 40% 96%;
-  --sidebar-border: 222 30% 18%;
-  --sidebar-ring: 199 89% 48%;
-
-  --gradient-primary: linear-gradient(
-    135deg,
-    hsl(199 89% 48%),
-    hsl(260 60% 55%)
-  );
-  --gradient-accent: linear-gradient(
-    135deg,
-    hsl(170 80% 45%),
-    hsl(199 89% 48%)
-  );
-  --shadow-glow: 0 0 40px hsl(199 89% 48% / 0.3);
-  --shadow-glow-lg:
-    0 0 80px hsl(199 89% 48% / 0.2), 0 0 120px hsl(260 60% 55% / 0.1);
-
-  @apply bg-background text-foreground antialiased;
-  color-scheme: dark;
-}
-
-@layer utilities {
-  .text-gradient {
-    background-image: var(--gradient-primary);
-    @apply bg-clip-text text-transparent;
-  }
-
-  .text-gradient-accent {
-    background-image: var(--gradient-accent);
-    @apply bg-clip-text text-transparent;
-  }
-
-  .bg-gradient-primary {
-    background-image: var(--gradient-primary);
-  }
-
-  .bg-gradient-accent {
-    background-image: var(--gradient-accent);
-  }
-
-  .glow {
-    box-shadow: var(--shadow-glow);
-  }
-
-  .glow-lg {
-    box-shadow: var(--shadow-glow-lg);
-  }
-
-  .glass {
-    @apply border border-border/50 bg-card/60 backdrop-blur-xl;
-  }
-
-  .glass-strong {
-    @apply border border-border/60 bg-card/80 backdrop-blur-2xl;
-  }
-
-  .animate-pulse-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
   }
 }
