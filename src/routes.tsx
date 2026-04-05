@@ -1,9 +1,8 @@
 import { Route, Routes } from "react-router-dom"
 
+import { LoginPage, SignupPage } from "@/features/auth"
 import LandingPage from "@/features/landing/LandingPage"
-import LoginPage from "@/features/login/LoginPage"
 import NotFoundPage from "@/features/not-found/NotFoundPage"
-import SignupPage from "@/features/signup/SignupPage"
 
 export function AppRoutes() {
   return (

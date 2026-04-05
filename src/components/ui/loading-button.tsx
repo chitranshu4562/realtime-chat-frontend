@@ -87,7 +87,7 @@ function LoadingButton({
       data-loading={loading ? "true" : "false"}
       className={cn(
         styles.root,
-        "h-auto min-h-10 px-4 py-2 text-lg",
+        "h-auto min-h-10 px-4 py-2 text-md",
         className,
       )}
       style={styleWithSpinnerVar(style, resolvedVariant)}
