@@ -3,7 +3,8 @@ import { useReducedMotion } from "framer-motion"
 
 const STEP_TRANSITION = { duration: 0.32, ease: [0.22, 1, 0.36, 1] as const }
 
-export function useSignupStepMotion() {
+/** Framer Motion variants for auth flows (signup steps, login card, etc.). */
+export function useAuthStepMotion() {
   const reduceMotion = useReducedMotion()
 
   const variants = useMemo(

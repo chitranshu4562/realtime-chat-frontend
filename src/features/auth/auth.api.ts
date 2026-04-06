@@ -1,6 +1,8 @@
 import http from "@/lib/http"
 
 import type {
+  LoginRequestBody,
+  LoginResponseData,
   SendOtpRequestBody,
   SignupRequestBody,
   SignupResponseData,
@@ -9,6 +11,8 @@ import type {
 } from "./auth.types"
 
 export type {
+  LoginRequestBody,
+  LoginResponseData,
   SendOtpRequestBody,
   SignupRequestBody,
   SignupResponseData,
@@ -47,6 +51,21 @@ export async function signup(
   const accessToken = res.data.data?.accessToken
   if (!accessToken) {
     throw new Error("Sign up succeeded but no access token was returned.")
+  }
+  return { accessToken }
+}
+
+/** POST /api/v1/login (base URL includes `/api/v1`). */
+export async function login(
+  body: LoginRequestBody,
+): Promise<LoginResponseData> {
+  const res = await http.post<LoginResponseData, LoginRequestBody>(
+    "/auth/login",
+    body,
+  )
+  const accessToken = res.data.data?.accessToken
+  if (!accessToken) {
+    throw new Error("Sign in succeeded but no access token was returned.")
   }
   return { accessToken }
 }

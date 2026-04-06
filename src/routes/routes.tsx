@@ -10,16 +10,17 @@ import { ProtectedRoute, PublicRoute } from "./route-guards"
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
 
       {/* Public auth routes — redirect to /home if already authenticated */}
       <Route element={<PublicRoute />}>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
       </Route>
 
       {/* Protected routes — redirect to /login if not authenticated */}
       <Route element={<ProtectedRoute />}>
+
         <Route path="/home" element={<HomePage />} />
       </Route>
 

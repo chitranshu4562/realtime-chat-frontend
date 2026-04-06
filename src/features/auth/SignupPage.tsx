@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
 
 import { SendOtpStep, SignupStep, VerifyOtpStep } from "./components"
-import { useSignupStepMotion } from "./hooks"
+import { useAuthStepMotion } from "./hooks"
 
 const STEP_KEYS = ["email", "otp", "register"] as const
 
@@ -14,7 +14,7 @@ type Step = 0 | 1 | 2
 
 export default function SignupPage() {
   const navigate = useNavigate()
-  const { variants: stepMotion, transition } = useSignupStepMotion()
+  const { variants: stepMotion, transition } = useAuthStepMotion()
   const [step, setStep] = useState<Step>(0)
   const [direction, setDirection] = useState(1)
   const [email, setEmail] = useState("")
@@ -96,6 +96,13 @@ export default function SignupPage() {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      <p className="text-muted-foreground text-center text-sm">
+        Already have an account?{" "}
+        <Link to="/login" className="text-primary font-medium underline-offset-4 hover:underline">
+          Log in
+        </Link>
+      </p>
 
       <Button variant="ghost" asChild>
         <Link to="/">← Back to home</Link>

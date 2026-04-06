@@ -27,3 +27,14 @@ export type SignupRequestBody = {
 export type SignupResponseData = {
   accessToken: string
 }
+
+/** Request body for POST /login */
+export type LoginRequestBody = {
+  email: string
+  password: string
+}
+
+/** Payload in ApiResponse.data for POST /login */
+export type LoginResponseData = {
+  accessToken: string
+}
