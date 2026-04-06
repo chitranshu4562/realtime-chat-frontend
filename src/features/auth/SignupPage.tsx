@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Button } from "@/components/ui/button"
@@ -13,6 +13,7 @@ const STEP_KEYS = ["email", "otp", "register"] as const
 type Step = 0 | 1 | 2
 
 export default function SignupPage() {
+  const navigate = useNavigate()
   const { variants: stepMotion, transition } = useSignupStepMotion()
   const [step, setStep] = useState<Step>(0)
   const [direction, setDirection] = useState(1)
@@ -89,6 +90,7 @@ export default function SignupPage() {
                 key={verifiedEmailToken}
                 email={email}
                 verifiedEmailToken={verifiedEmailToken}
+                onSuccess={() => navigate("/home", { replace: true })}
               />
             ) : null}
           </motion.div>

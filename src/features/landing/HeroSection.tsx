@@ -59,7 +59,7 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-muted-foreground mx-auto mb-10 max-w-2xl text-lg leading-relaxed sm:text-xl"
           >
-            Lightning-fast, end-to-end encrypted messaging that keeps you connected.
+            Lightning-fast messaging that keeps you connected.
             No lag. No limits. Just pure conversation.
           </motion.p>
 

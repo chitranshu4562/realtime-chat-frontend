@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form"
 import { LoadingButton } from "@/components/ui/loading-button"
 import { LabeledInput } from "@/components/ui/labeled-input"
 
+import { useAuthStore } from "../store/useAuthStore"
 import { useSignup } from "../hooks"
 import { type SignupValues, signupSchema } from "../schemas"
 
@@ -15,6 +16,7 @@ type SignupStepProps = {
 
 export function SignupStep({ email, verifiedEmailToken, onSuccess }: SignupStepProps) {
   const signupMutation = useSignup()
+  const setAccessToken = useAuthStore((s) => s.setAccessToken)
 
   const {
     register,
@@ -32,13 +34,14 @@ export function SignupStep({ email, verifiedEmailToken, onSuccess }: SignupStepP
   })
 
   async function onSubmit(values: SignupValues) {
-    await signupMutation.mutateAsync({
+    const { accessToken } = await signupMutation.mutateAsync({
       verifiedEmailToken: values.verifiedEmailToken,
       name: values.name,
       phoneNumber: values.phoneNumber,
       password: values.password,
       confirmPassword: values.confirmPassword,
     })
+    setAccessToken(accessToken)
     onSuccess?.()
   }
 

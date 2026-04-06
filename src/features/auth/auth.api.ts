@@ -50,3 +50,8 @@ export async function signup(
   }
   return { accessToken }
 }
+
+/** POST /api/v1/auth/logout (base URL includes `/api/v1`). */
+export async function logout() {
+  return http.post<unknown>("/auth/logout")
+}

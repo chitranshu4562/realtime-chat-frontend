@@ -1,3 +1,4 @@
+export { useLogout } from "./useLogout"
 export { useSendOtp } from "./useSendOtp"
 export { useSignup } from "./useSignup"
 export { useVerifyOtp } from "./useVerifyOtp"

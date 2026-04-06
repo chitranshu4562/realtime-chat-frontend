@@ -37,7 +37,7 @@ function OtpSlots({
           data-slot="input-otp-slot"
           data-active={slot.isActive}
           className={cn(
-            "relative flex aspect-square min-h-10 w-full min-w-0 items-center justify-center rounded-lg border border-input bg-background text-base font-medium tabular-nums transition-all outline-none",
+            "relative flex aspect-square min-h-11 w-full min-w-0 items-center justify-center rounded-lg border border-input bg-background text-xl font-medium tabular-nums transition-all outline-none",
             "dark:bg-input/30",
             invalid && "border-destructive dark:border-destructive/50",
             slot.isActive && !invalid && "z-10 border-ring ring-[3px] ring-ring/50",
@@ -47,7 +47,7 @@ function OtpSlots({
           {slot.char != null ? (showCode ? slot.char : "•") : null}
           {slot.hasFakeCaret ? (
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
+              <div className="h-5 w-px animate-caret-blink bg-foreground duration-1000" />
             </div>
           ) : null}
         </div>
@@ -111,6 +111,7 @@ export function VerifyOtpStep({ email, onVerified, onBack }: VerifyOtpStepProps)
           render={({ field }) => (
             <div className="flex w-full flex-col gap-2">
               <InputOTP
+                autoFocus
                 id="verify-otp"
                 maxLength={6}
                 pattern={REGEXP_ONLY_DIGITS}

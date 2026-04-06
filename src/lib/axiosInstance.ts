@@ -1,7 +1,9 @@
 import axios from "axios";
 import type { AxiosResponse } from "axios";
-import type { ApiError, ApiResponse, ApiResult } from "./api-types";
 import env from "@/config/env";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+
+import type { ApiError, ApiResponse, ApiResult } from "./api-types";
 
 const axiosInstance = axios.create({
   baseURL: env.apiUrl,
@@ -10,6 +12,12 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use((config) => {
   config.headers.Accept = "application/json";
+  const token = useAuthStore.getState().accessToken;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    delete config.headers.Authorization;
+  }
   return config;
 });
 
