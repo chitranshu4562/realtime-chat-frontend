@@ -33,7 +33,7 @@ export default function LoginPage() {
       password: values.password,
     })
     setAccessToken(accessToken)
-    navigate("/home", { replace: true })
+    navigate("/conversation", { replace: true })
   }
 
   return (

@@ -4,7 +4,8 @@ import { Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-import { Button, buttonVariants } from "./button"
+import { BaseButton } from "./base-button"
+import { buttonVariants } from "./button"
 import styles from "./loading-button.module.css"
 
 type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>["variant"]>
@@ -23,7 +24,7 @@ const SPINNER_CSS_VAR: Record<ButtonVariant, string> = {
 }
 
 export type LoadingButtonProps = Omit<
-  React.ComponentProps<typeof Button>,
+  React.ComponentProps<typeof BaseButton>,
   "asChild"
 > & {
   loading?: boolean
@@ -80,16 +81,12 @@ function LoadingButton({
   const resolvedVariant: ButtonVariant = variant ?? "default"
 
   return (
-    <Button
+    <BaseButton
       variant={variant}
       disabled={disabled || loading}
       aria-busy={loading}
       data-loading={loading ? "true" : "false"}
-      className={cn(
-        styles.root,
-        "h-auto min-h-10 px-4 py-2 text-md",
-        className,
-      )}
+      className={cn(styles.root, className)}
       style={styleWithSpinnerVar(style, resolvedVariant)}
       {...rest}
     >
@@ -104,7 +101,7 @@ function LoadingButton({
         visible={loading}
         screenReaderLabel={loadingLabel}
       />
-    </Button>
+    </BaseButton>
   )
 }
 

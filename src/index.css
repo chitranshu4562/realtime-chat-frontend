@@ -224,6 +224,11 @@
     --color-nav-item-bg-active: 232 60% 94%;
     --color-nav-item-text-active: 232 72% 52%;
 
+    /* ===== APP HEADER (conversation shell) ===== */
+    --app-header-bg: 0 0% 100% / 0.78;
+    --app-header-blur: 14px;
+    --app-header-shadow: 220 24% 36% / 0.08;
+
     /* ===== BADGES ===== */
     --color-badge-default-bg: 220 18% 93%;
     --color-badge-default-text: 214 18% 30%;
@@ -379,6 +384,11 @@
     --color-nav-item-bg-hover: 222 18% 16%;
     --color-nav-item-bg-active: 240 20% 16%;
     --color-nav-item-text-active: 234 72% 72%;
+
+    /* ===== APP HEADER (conversation shell) ===== */
+    --app-header-bg: 224 22% 11% / 0.82;
+    --app-header-blur: 14px;
+    --app-header-shadow: 0 0% 0% / 0.42;
 
     /* ===== BADGES ===== */
     --color-badge-default-bg: 222 18% 16%;

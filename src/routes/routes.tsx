@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 
 import { LoginPage, SignupPage } from "@/features/auth"
-import HomePage from "@/features/home/HomePage"
+import ConversationPage from "@/features/conversation/ConversationPage"
 import LandingPage from "@/features/landing/LandingPage"
 import NotFoundPage from "@/features/not-found/NotFoundPage"
 
@@ -11,7 +11,7 @@ export function AppRoutes() {
   return (
     <Routes>
 
-      {/* Public auth routes — redirect to /home if already authenticated */}
+      {/* Public auth routes — redirect to /conversation if already authenticated */}
       <Route element={<PublicRoute />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -21,7 +21,7 @@ export function AppRoutes() {
       {/* Protected routes — redirect to /login if not authenticated */}
       <Route element={<ProtectedRoute />}>
 
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/conversation" element={<ConversationPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

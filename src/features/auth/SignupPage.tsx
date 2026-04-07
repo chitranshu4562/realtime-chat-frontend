@@ -90,7 +90,7 @@ export default function SignupPage() {
                 key={verifiedEmailToken}
                 email={email}
                 verifiedEmailToken={verifiedEmailToken}
-                onSuccess={() => navigate("/home", { replace: true })}
+                onSuccess={() => navigate("/conversation", { replace: true })}
               />
             ) : null}
           </motion.div>

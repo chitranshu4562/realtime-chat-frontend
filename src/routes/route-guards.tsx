@@ -11,11 +11,11 @@ export function ProtectedRoute() {
   return <Outlet />
 }
 
-/** Layout for guest-only auth pages — renders child routes or redirects to `/home`. */
+/** Layout for guest-only auth pages — renders child routes or redirects to `/conversation`. */
 export function PublicRoute() {
   const signedIn = useAuthStore(isAuthenticated)
   if (signedIn) {
-    return <Navigate to="/home" replace />
+    return <Navigate to="/conversation" replace />
   }
   return <Outlet />
 }

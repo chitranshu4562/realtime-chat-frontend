@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 
 import { LoadingButton } from "@/components/ui/loading-button"
 import { LabeledInput } from "@/components/ui/labeled-input"
+import { SecondaryButton } from "@/components/ui/secondary-button"
 
 import { useSendOtp } from "../hooks"
 import { type SendOtpValues, sendOtpSchema } from "../schemas"
@@ -21,6 +22,8 @@ export function SendOtpStep({
   const {
     register,
     handleSubmit,
+    reset,
+    watch,
     formState: { errors },
   } = useForm<SendOtpValues>({
     resolver: zodResolver(sendOtpSchema),
@@ -51,14 +54,26 @@ export function SendOtpStep({
         {...register("email")}
       />
 
-      <LoadingButton
-        type="submit"
-        className="w-full"
-        loading={sendOtpMutation.isPending}
-        loadingLabel="Sending code"
-      >
-        Send verification code
-      </LoadingButton>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
+        <LoadingButton
+          type="submit"
+          className="w-full"
+          loading={sendOtpMutation.isPending}
+          loadingLabel="Sending code"
+        >
+          Send OTP
+        </LoadingButton>
+        <SecondaryButton
+          type="button"
+          className="w-full"
+          disabled={
+            sendOtpMutation.isPending || !watch("email")?.trim()
+          }
+          onClick={() => reset({ email: "" })}
+        >
+          Change email
+        </SecondaryButton>
+      </div>
     </form>
   )
 }
