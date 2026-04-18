@@ -4,7 +4,7 @@ import type { ApiResponse } from "./api-types";
 import axiosInstance from "./axiosInstance";
 
 const http = {
-    get: <T>(url: string, params?: object) =>
+    get: <T, P = unknown>(url: string, params?: P) =>
       axiosInstance.get<ApiResponse<T>, ApiResult<T>>(url, { params }),
   
     post: <T, B = unknown>(url: string, body?: B) =>

@@ -38,3 +38,8 @@ export type LoginRequestBody = {
 export type LoginResponseData = {
   accessToken: string
 }
+
+/** Payload in ApiResponse.data for POST /auth/refresh */
+export type RefreshResponseData = {
+  accessToken: string
+}

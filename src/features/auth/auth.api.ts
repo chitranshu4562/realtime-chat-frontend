@@ -3,6 +3,7 @@ import http from "@/lib/http"
 import type {
   LoginRequestBody,
   LoginResponseData,
+  RefreshResponseData,
   SendOtpRequestBody,
   SignupRequestBody,
   SignupResponseData,
@@ -13,6 +14,7 @@ import type {
 export type {
   LoginRequestBody,
   LoginResponseData,
+  RefreshResponseData,
   SendOtpRequestBody,
   SignupRequestBody,
   SignupResponseData,
@@ -73,4 +75,19 @@ export async function login(
 /** POST /api/v1/auth/logout (base URL includes `/api/v1`). */
 export async function logout() {
   return http.post<unknown>("/auth/logout")
+}
+
+/**
+ * POST /api/v1/auth/refresh
+ *
+ * The refresh token rides in an HTTP-only cookie (axios `withCredentials: true`),
+ * so no request body is needed. Returns a fresh access token.
+ */
+export async function refreshAccessToken(): Promise<RefreshResponseData> {
+  const res = await http.post<RefreshResponseData>("/auth/refresh")
+  const accessToken = res.data.data?.accessToken
+  if (!accessToken) {
+    throw new Error("Refresh failed: no access token returned.")
+  }
+  return { accessToken }
 }
