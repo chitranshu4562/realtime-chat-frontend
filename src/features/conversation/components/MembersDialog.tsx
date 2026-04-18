@@ -1,6 +1,5 @@
 import * as React from "react"
 import { AlertCircle, Check, MessageCircle, Users } from "lucide-react"
-import { motion } from "framer-motion"
 
 import { AppModal } from "@/components/ui/app-modal"
 import { BaseButton } from "@/components/ui/base-button"
@@ -11,7 +10,7 @@ import type { User } from "@/features/user/user.types"
 import { notifyError } from "@/lib/toast"
 import { cn } from "@/lib/utils"
 
-const SKELETON_ROW_COUNT = 6
+import { MembersListSkeleton } from "./shimmer/MembersListSkeleton"
 
 function initialsFromUser(user: User): string {
   const source = user.name.trim() || user.email.trim()
@@ -32,52 +31,6 @@ const memberRowClass = cn(
 const memberRowSelectedClass = cn(
   "border-primary/60 bg-primary/8 shadow-[0_0_0_1px_hsl(var(--primary)/0.12)]",
 )
-
-function ShimmerBar({ className }: { className?: string }) {
-  return (
-    <span
-      className={cn("relative block overflow-hidden rounded-md bg-muted", className)}
-      aria-hidden
-    >
-      <motion.span
-        className="pointer-events-none absolute inset-y-0 w-2/5 bg-gradient-to-r from-transparent via-foreground/12 to-transparent dark:via-foreground/18"
-        initial={{ x: "-60%" }}
-        animate={{ x: "280%" }}
-        transition={{
-          duration: 1.35,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "linear",
-        }}
-      />
-    </span>
-  )
-}
-
-function MemberUserCardSkeleton() {
-  return (
-    <div
-      className={cn(memberRowClass, "pointer-events-none cursor-default")}
-      aria-hidden
-    >
-      <ShimmerBar className="size-11 shrink-0 rounded-full" />
-      <span className="min-w-0 flex-1 space-y-2 py-0.5">
-        <ShimmerBar className="h-4 w-[42%] max-w-[10rem]" />
-        <ShimmerBar className="h-3 w-[68%] max-w-[14rem]" />
-      </span>
-      <span className="size-8 shrink-0 rounded-full bg-muted/80" />
-    </div>
-  )
-}
-
-function MembersListSkeleton() {
-  return (
-    <div className="flex flex-col gap-2" aria-busy="true" aria-label="Loading members">
-      {Array.from({ length: SKELETON_ROW_COUNT }, (_, i) => (
-        <MemberUserCardSkeleton key={i} />
-      ))}
-    </div>
-  )
-}
 
 type MembersListErrorProps = {
   error: unknown
