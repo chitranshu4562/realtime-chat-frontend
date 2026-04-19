@@ -34,7 +34,7 @@ export function ConversationDashboard({ className }: ConversationDashboardProps)
       {showNoConversationFound ? (
         <div
           className={cn(
-            "flex min-h-0 flex-1 flex-col items-center justify-center px-4 py-10",
+            "flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center px-4 py-10",
             className,
           )}
         >
@@ -43,7 +43,7 @@ export function ConversationDashboard({ className }: ConversationDashboardProps)
       ) : (
         <div
           className={cn(
-            "flex min-h-0 flex-1 flex-col md:flex-row",
+            "flex min-h-0 min-w-0 flex-1 flex-col md:flex-row",
             className,
           )}
         >
@@ -57,10 +57,7 @@ export function ConversationDashboard({ className }: ConversationDashboardProps)
             onSelectConversation={setSelectedConversation}
             onRequestNewChat={openMembersDialog}
           />
-          <ChatRoomPanel
-            selectedConversation={selectedConversation}
-            className="min-h-[50vh] md:min-h-0"
-          />
+          <ChatRoomPanel selectedConversation={selectedConversation} />
         </div>
       )}
       <MembersDialog open={membersOpen} onOpenChange={setMembersOpen} />

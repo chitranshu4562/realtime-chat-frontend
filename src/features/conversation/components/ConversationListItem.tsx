@@ -23,8 +23,8 @@ export function ConversationListItem({
   selected,
   onSelect,
 }: ConversationListItemProps) {
-  const title =
-    conversation.member.name.trim() || `Conversation ${conversation.id}`
+  const member = conversation.members.find((m) => !m.isAdmin);
+  const title = member?.name.trim() || `Conversation ${conversation.id}`;
 
   return (
     <button

@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import env from "@/config/env";
+import type { User } from "@/features/auth/auth.types";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 import type { ApiError, ApiResponse, ApiResult } from "./api-types";
@@ -33,17 +34,18 @@ async function runRefresh(): Promise<string> {
     // (auth.api -> http -> axiosInstance) and to bypass this interceptor so a
     // 401 from /auth/refresh itself does not recurse.
     refreshPromise = axios
-      .post<ApiResponse<{ accessToken: string }>>(
+      .post<ApiResponse<{ accessToken: string; user: User }>>(
         `${env.apiUrl}/auth/refresh`,
         null,
         { withCredentials: true },
       )
       .then((response) => {
         const accessToken = response.data?.data?.accessToken;
-        if (!accessToken) {
-          throw new Error("Refresh failed: no access token returned.");
+        const user = response.data?.data?.user;
+        if (!accessToken || !user) {
+          throw new Error("Refresh failed: auth payload was incomplete.");
         }
-        useAuthStore.getState().setAccessToken(accessToken);
+        useAuthStore.getState().setAuth({ accessToken, user });
         return accessToken;
       })
       .finally(() => {

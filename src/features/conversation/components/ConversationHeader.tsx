@@ -45,7 +45,7 @@ export function ConversationHeader() {
     <>
       <header
         className={cn(
-          "sticky top-0 z-40 flex h-14 shrink-0 items-center justify-between gap-4 px-4 sm:px-6",
+          "z-40 flex h-14 shrink-0 items-center justify-between gap-4 px-4 sm:px-6",
           "border-b border-[hsl(var(--color-nav-border))]",
           "bg-[hsl(var(--app-header-bg))] [backdrop-filter:blur(var(--app-header-blur))]",
           "shadow-[0_1px_0_0_hsl(var(--app-header-shadow))]",
