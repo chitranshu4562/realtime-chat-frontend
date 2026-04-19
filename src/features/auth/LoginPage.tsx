@@ -16,7 +16,7 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const { variants: stepMotion, transition } = useAuthStepMotion()
   const loginMutation = useLogin()
-  const setAccessToken = useAuthStore((s) => s.setAccessToken)
+  const setAuth = useAuthStore((s) => s.setAuth)
 
   const {
     register,
@@ -28,11 +28,11 @@ export default function LoginPage() {
   })
 
   async function onSubmit(values: LoginValues) {
-    const { accessToken } = await loginMutation.mutateAsync({
+    const { accessToken, user } = await loginMutation.mutateAsync({
       email: values.email.trim(),
       password: values.password,
     })
-    setAccessToken(accessToken)
+    setAuth({ accessToken, user })
     navigate("/conversation", { replace: true })
   }
 

@@ -1,9 +1,10 @@
 const env = {
-    apiUrl: import.meta.env.VITE_API_URL,
+    baseUrl: import.meta.env.VITE_BASE_URL,
+    apiUrl: `${import.meta.env.VITE_BASE_URL}/api/v1`,
 } as const;
 
-if (!env.apiUrl) {
-    throw new Error('VITE_API_URL is not set');
+if (!env.baseUrl) {
+    throw new Error('VITE_BASE_URL is not set');
 }
 
 export default env;

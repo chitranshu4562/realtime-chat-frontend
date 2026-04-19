@@ -1,5 +1,8 @@
 import { queryClient } from "@/lib/queryClient"
-import type { FetchConversationListQueryParams } from "./conversation.types"
+import type {
+  FetchConversationListQueryParams,
+  FetchMessagesQueryParams,
+} from "./conversation.types"
 
 export const conversationKeys = {
   all: ["conversations"] as const,
@@ -8,6 +11,9 @@ export const conversationKeys = {
     [...conversationKeys.lists(), params] as const,
   details: () => [...conversationKeys.all, "detail"] as const,
   detail: (id: number) => [...conversationKeys.details(), id] as const,
+  messages: () => [...conversationKeys.all, "messages"] as const,
+  messagesList: (params: FetchMessagesQueryParams) =>
+    [...conversationKeys.messages(), params] as const,
 }
 
 export const conversationCache = {
@@ -17,4 +23,10 @@ export const conversationCache = {
     queryClient.invalidateQueries({ queryKey: conversationKeys.lists() }),
   invalidateDetail: (id: number) =>
     queryClient.invalidateQueries({ queryKey: conversationKeys.detail(id) }),
+  invalidateMessages: (params: FetchMessagesQueryParams) =>
+    queryClient.invalidateQueries({
+      queryKey: conversationKeys.messagesList(params),
+    }),
+  invalidateAllMessages: () =>
+    queryClient.invalidateQueries({ queryKey: conversationKeys.messages() }),
 }

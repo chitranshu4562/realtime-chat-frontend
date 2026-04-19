@@ -16,7 +16,7 @@ type SignupStepProps = {
 
 export function SignupStep({ email, verifiedEmailToken, onSuccess }: SignupStepProps) {
   const signupMutation = useSignup()
-  const setAccessToken = useAuthStore((s) => s.setAccessToken)
+  const setAuth = useAuthStore((s) => s.setAuth)
 
   const {
     register,
@@ -34,14 +34,14 @@ export function SignupStep({ email, verifiedEmailToken, onSuccess }: SignupStepP
   })
 
   async function onSubmit(values: SignupValues) {
-    const { accessToken } = await signupMutation.mutateAsync({
+    const { accessToken, user } = await signupMutation.mutateAsync({
       verifiedEmailToken: values.verifiedEmailToken,
       name: values.name,
       phoneNumber: values.phoneNumber,
       password: values.password,
       confirmPassword: values.confirmPassword,
     })
-    setAccessToken(accessToken)
+    setAuth({ accessToken, user })
     onSuccess?.()
   }
 

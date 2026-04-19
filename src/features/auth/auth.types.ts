@@ -23,9 +23,18 @@ export type SignupRequestBody = {
   confirmPassword: string
 }
 
+/** Authenticated user profile returned alongside auth tokens. */
+export type User = {
+  id: string
+  name: string | null
+  email: string
+  phoneNumber: string
+}
+
 /** Payload in ApiResponse.data for POST /auth/signup */
 export type SignupResponseData = {
   accessToken: string
+  user: User
 }
 
 /** Request body for POST /login */
@@ -37,9 +46,11 @@ export type LoginRequestBody = {
 /** Payload in ApiResponse.data for POST /login */
 export type LoginResponseData = {
   accessToken: string
+  user: User
 }
 
 /** Payload in ApiResponse.data for POST /auth/refresh */
 export type RefreshResponseData = {
   accessToken: string
+  user: User
 }

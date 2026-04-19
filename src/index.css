@@ -429,12 +429,41 @@
     @apply font-sans antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    scroll-behavior: smooth;
+  }
+
+  html,
+  body,
+  #root {
+    @apply h-screen overflow-hidden;
   }
 
   body {
-    @apply m-0 bg-background text-foreground min-h-screen;
+    @apply m-0 bg-background text-foreground;
     font-size: var(--text-base);
     line-height: 1.6;
+  }
+
+  /* Thin, theme-aware scrollbars (Firefox + WebKit) */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--color-scrollbar-thumb)) hsl(var(--color-scrollbar-track));
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: hsl(var(--color-scrollbar-track));
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: hsl(var(--color-scrollbar-thumb));
+    border-radius: 9999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--color-scrollbar-thumb-hover));
   }
 }

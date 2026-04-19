@@ -1,5 +1,5 @@
 import http from "@/lib/http";
-import type { CreateConversationRequestBody, CreateConversationResponseData, FetchConversationListResponseData } from "./conversation.types";
+import type { CreateConversationRequestBody, CreateConversationResponseData, FetchConversationListResponseData, FetchMessagesQueryParams, FetchMessagesResponseData } from "./conversation.types";
 
 export async function createConversation(body: CreateConversationRequestBody): Promise<CreateConversationResponseData> {
     const res = await http.post<CreateConversationResponseData, CreateConversationRequestBody>("/conversations/create", body);
@@ -13,6 +13,14 @@ export async function fetchConversationList(): Promise<FetchConversationListResp
     const res = await http.get<FetchConversationListResponseData>("/conversations");
     if (!res.data.data) {
         throw new Error("Failed to fetch conversation list");
+    }
+    return res.data.data;
+}
+
+export async function getMessages(params: FetchMessagesQueryParams): Promise<FetchMessagesResponseData> {
+    const res = await http.get<FetchMessagesResponseData, FetchMessagesQueryParams>("/messages", params);
+    if (!res.data.data) {
+        throw new Error("Failed to fetch messages");
     }
     return res.data.data;
 }

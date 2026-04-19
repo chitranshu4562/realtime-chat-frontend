@@ -22,9 +22,18 @@ const themeRowClass = cn(
   "has-[[data-state=checked]]:border-primary/60 has-[[data-state=checked]]:bg-accent/50",
 )
 
+type ThemeChoice = "system" | "light" | "dark"
+
 type ThemeSettingsDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
+}
+
+function parseThemeChoice(value: string): ThemeChoice | null {
+  if (value === "system" || value === "light" || value === "dark") {
+    return value
+  }
+  return null
 }
 
 export function ThemeSettingsDialog({
@@ -33,12 +42,26 @@ export function ThemeSettingsDialog({
 }: ThemeSettingsDialogProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
+  const [pendingTheme, setPendingTheme] = React.useState<ThemeChoice>("system")
 
   React.useEffect(() => {
     setMounted(true)
   }, [])
 
-  const themeValue = theme ?? "system"
+  React.useEffect(() => {
+    if (!open || !mounted) return
+    const next = parseThemeChoice(theme ?? "system")
+    setPendingTheme(next ?? "system")
+  }, [open, mounted, theme])
+
+  const handleRadioChange = (value: string) => {
+    const next = parseThemeChoice(value)
+    if (next) {
+      setPendingTheme(next)
+    }
+  }
+
+  const themeValue = pendingTheme
 
   return (
     <AppModal.Root variant="dialog" open={open} onOpenChange={onOpenChange}>
@@ -52,7 +75,7 @@ export function ThemeSettingsDialog({
         <RadioGroup.Root
           className="mt-6 grid gap-2.5"
           value={themeValue}
-          onValueChange={(v) => setTheme(v)}
+          onValueChange={handleRadioChange}
           disabled={!mounted}
           aria-label="Color theme"
         >
@@ -148,6 +171,7 @@ export function ThemeSettingsDialog({
             <BaseButton
               type="button"
               className="w-full rounded-xl sm:w-auto sm:min-w-24"
+              onClick={() => setTheme(pendingTheme)}
             >
               Done
             </BaseButton>

@@ -18,6 +18,7 @@ export type {
   SendOtpRequestBody,
   SignupRequestBody,
   SignupResponseData,
+  User,
   VerifyOtpRequestBody,
   VerifyOtpResponseData,
 } from "./auth.types"
@@ -51,10 +52,11 @@ export async function signup(
     body,
   )
   const accessToken = res.data.data?.accessToken
-  if (!accessToken) {
-    throw new Error("Sign up succeeded but no access token was returned.")
+  const user = res.data.data?.user
+  if (!accessToken || !user) {
+    throw new Error("Sign up succeeded but auth payload was incomplete.")
   }
-  return { accessToken }
+  return { accessToken, user }
 }
 
 /** POST /api/v1/login (base URL includes `/api/v1`). */
@@ -66,10 +68,11 @@ export async function login(
     body,
   )
   const accessToken = res.data.data?.accessToken
-  if (!accessToken) {
-    throw new Error("Sign in succeeded but no access token was returned.")
+  const user = res.data.data?.user
+  if (!accessToken || !user) {
+    throw new Error("Sign in succeeded but auth payload was incomplete.")
   }
-  return { accessToken }
+  return { accessToken, user }
 }
 
 /** POST /api/v1/auth/logout (base URL includes `/api/v1`). */
@@ -86,8 +89,9 @@ export async function logout() {
 export async function refreshAccessToken(): Promise<RefreshResponseData> {
   const res = await http.post<RefreshResponseData>("/auth/refresh")
   const accessToken = res.data.data?.accessToken
-  if (!accessToken) {
-    throw new Error("Refresh failed: no access token returned.")
+  const user = res.data.data?.user
+  if (!accessToken || !user) {
+    throw new Error("Refresh failed: auth payload was incomplete.")
   }
-  return { accessToken }
+  return { accessToken, user }
 }

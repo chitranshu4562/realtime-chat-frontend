@@ -3,9 +3,12 @@ import { persist } from "zustand/middleware"
 
 import { AUTH_STORAGE_KEY } from "@/lib/constants"
 
+import type { User } from "../auth.types"
+
 type AuthState = {
   accessToken: string | null
-  setAccessToken: (token: string) => void
+  user: User | null
+  setAuth: (payload: { accessToken: string; user: User }) => void
   logout: () => void
 }
 
@@ -13,12 +16,16 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       accessToken: null,
-      setAccessToken: (token) => set({ accessToken: token }),
-      logout: () => set({ accessToken: null }),
+      user: null,
+      setAuth: ({ accessToken, user }) => set({ accessToken, user }),
+      logout: () => set({ accessToken: null, user: null }),
     }),
     {
       name: AUTH_STORAGE_KEY,
-      partialize: (state) => ({ accessToken: state.accessToken }),
+      partialize: (state) => ({
+        accessToken: state.accessToken,
+        user: state.user,
+      }),
     },
   ),
 )
