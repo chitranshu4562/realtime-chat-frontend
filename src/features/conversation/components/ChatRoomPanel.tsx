@@ -7,11 +7,13 @@ import { ChatRoomEmptyState } from "./ChatRoomEmptyState"
 
 export type ChatRoomPanelProps = {
   selectedConversation: Conversation | null
+  onBack?: () => void
   className?: string
 }
 
 export function ChatRoomPanel({
   selectedConversation,
+  onBack,
   className,
 }: ChatRoomPanelProps) {
   const panelClass = cn(
@@ -23,6 +25,7 @@ export function ChatRoomPanel({
     return (
       <ActiveChatRoom
         conversation={selectedConversation}
+        onBack={onBack}
         className={panelClass}
       />
     )

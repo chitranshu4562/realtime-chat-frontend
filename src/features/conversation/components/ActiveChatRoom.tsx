@@ -1,4 +1,4 @@
-import { AlertCircle, Loader2 } from "lucide-react"
+import { AlertCircle, ChevronLeft, Loader2 } from "lucide-react"
 import { useEffect, useRef } from "react"
 
 import { SecondaryButton } from "@/components/ui/secondary-button"
@@ -13,6 +13,7 @@ import { MessageListItem } from "./MessageListItem"
 
 export type ActiveChatRoomProps = {
   conversation: Conversation
+  onBack?: () => void
   className?: string
 }
 
@@ -49,7 +50,7 @@ function MessagesError({ error, onRetry }: MessagesErrorProps) {
   )
 }
 
-export function ActiveChatRoom({ conversation, className }: ActiveChatRoomProps) {
+export function ActiveChatRoom({ conversation, onBack, className }: ActiveChatRoomProps) {
   const { emitMessageSend } = useConversationSocket(conversation.id)
   const loggedInUserId = useAuthStore((state) => state.user?.id)
   const currentUserNumericId = loggedInUserId === undefined ? NaN : Number(loggedInUserId)
@@ -89,9 +90,21 @@ export function ActiveChatRoom({ conversation, className }: ActiveChatRoomProps)
       aria-label={`Chat with ${title}`}
     >
       <header className="min-w-0 shrink-0 border-b border-border px-4 py-3 sm:px-6">
-        <h2 className="truncate text-base font-semibold tracking-tight text-foreground">
-          {title}
-        </h2>
+        <div className="flex min-w-0 items-center gap-1.5">
+          {onBack ? (
+            <button
+              type="button"
+              onClick={onBack}
+              className="md:hidden -ml-1 flex shrink-0 items-center justify-center rounded-lg p-1.5 text-muted-foreground hover:bg-accent hover:text-foreground"
+              aria-label="Back to conversations"
+            >
+              <ChevronLeft className="size-5" strokeWidth={2} />
+            </button>
+          ) : null}
+          <h2 className="truncate text-base font-semibold tracking-tight text-foreground">
+            {title}
+          </h2>
+        </div>
       </header>
 
       {isPending ? (

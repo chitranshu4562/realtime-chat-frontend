@@ -56,8 +56,13 @@ export function ConversationDashboard({ className }: ConversationDashboardProps)
             selectedConversation={selectedConversation}
             onSelectConversation={setSelectedConversation}
             onRequestNewChat={openMembersDialog}
+            className={cn(selectedConversation !== null && "hidden md:flex")}
           />
-          <ChatRoomPanel selectedConversation={selectedConversation} />
+          <ChatRoomPanel
+            selectedConversation={selectedConversation}
+            onBack={() => setSelectedConversation(null)}
+            className={cn(selectedConversation === null && "hidden md:flex")}
+          />
         </div>
       )}
       <MembersDialog open={membersOpen} onOpenChange={setMembersOpen} />
