@@ -42,6 +42,7 @@ export function MessageComposer({
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm<SendMessageFormValues>({
     resolver: zodResolver(sendMessageFormSchema),
@@ -69,6 +70,7 @@ export function MessageComposer({
   }
 
   const hasError = Boolean(errors.content)
+  const isEmpty = watch("content").trim() === ""
 
   return (
     <form
@@ -97,7 +99,7 @@ export function MessageComposer({
           size="icon"
           className="size-10 shrink-0"
           aria-label="Send message"
-          disabled={disabled}
+          disabled={disabled || isEmpty}
         >
           <Send className="size-4" />
         </Button>

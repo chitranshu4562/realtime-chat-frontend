@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/features/auth/store/useAuthStore"
 import { cn } from "@/lib/utils"
 
 import type { Conversation } from "../conversation.types"
@@ -23,8 +24,11 @@ export function ConversationListItem({
   selected,
   onSelect,
 }: ConversationListItemProps) {
-  const member = conversation.members.find((m) => !m.isAdmin);
-  const title = member?.name.trim() || `Conversation ${conversation.id}`;
+  const loggedInUserId = useAuthStore((s) => s.user?.id)
+  const title =
+    conversation.type === "GROUP"
+      ? (conversation.name?.trim() || "Group")
+      : (conversation.members.find((m) => m.id !== loggedInUserId)?.name?.trim() || `Conversation ${conversation.id}`)
 
   return (
     <button

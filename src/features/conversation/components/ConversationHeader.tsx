@@ -26,6 +26,7 @@ const menuItemClass = cn(
 export function ConversationHeader() {
   const navigate = useNavigate()
   const clearAuth = useAuthStore((s) => s.logout)
+  const userName = useAuthStore((s) => s.user?.name)
   const logoutMutation = useLogout()
 
   const [themeOpen, setThemeOpen] = React.useState(false)
@@ -62,6 +63,11 @@ export function ConversationHeader() {
             <p className="truncate text-lg font-semibold tracking-tight text-foreground">
               Realtime Chat
             </p>
+            {userName ? (
+              <p className="truncate text-xs text-muted-foreground">
+                {userName}
+              </p>
+            ) : null}
           </div>
         </div>
 

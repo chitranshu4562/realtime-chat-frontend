@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils"
 
 import { MembersListSkeleton } from "./shimmer/MembersListSkeleton"
 
+type Mode = "direct" | "group"
+
 function initialsFromUser(user: User): string {
   const source = user.name.trim() || user.email.trim()
   if (!source) return "?"
@@ -43,20 +45,12 @@ function MembersListError({ error, onRetry }: MembersListErrorProps) {
 
   return (
     <div className="flex flex-col items-center gap-4 rounded-xl border border-destructive/25 bg-destructive/5 px-4 py-8 text-center">
-      <AlertCircle
-        className="size-10 text-destructive"
-        strokeWidth={2}
-        aria-hidden
-      />
+      <AlertCircle className="size-10 text-destructive" strokeWidth={2} aria-hidden />
       <div className="space-y-1">
         <p className="text-sm font-medium text-foreground">Could not load members</p>
         <p className="text-xs text-muted-foreground">{message}</p>
       </div>
-      <SecondaryButton
-        type="button"
-        className="rounded-xl"
-        onClick={() => void onRetry()}
-      >
+      <SecondaryButton type="button" className="rounded-xl" onClick={() => void onRetry()}>
         Try again
       </SecondaryButton>
     </div>
@@ -110,57 +104,92 @@ function MemberUserCard({ user, selected, onSelect }: MemberUserCardProps) {
   )
 }
 
+const INPUT_CLASSES = cn(
+  "flex h-10 w-full min-w-0 rounded-lg border border-input bg-background px-3 text-sm text-foreground transition-[color,box-shadow] outline-none",
+  "placeholder:text-muted-foreground",
+  "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+)
+
 export type MembersDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  /** Called when the user confirms starting a chat with the selected member. */
   onStartChat?: (user: User) => void
 }
 
-export function MembersDialog({
-  open,
-  onOpenChange,
-  onStartChat,
-}: MembersDialogProps) {
+export function MembersDialog({ open, onOpenChange, onStartChat }: MembersDialogProps) {
+  const [mode, setMode] = React.useState<Mode>("direct")
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
+  const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set())
+  const [groupName, setGroupName] = React.useState("")
 
-  const { data, isPending, isError, error, refetch } = useFetchUserList(
-    {},
-    { enabled: open },
-  )
+  const { data, isPending, isError, error, refetch } = useFetchUserList({}, { enabled: open })
+  const { mutate: runCreateConversation, isPending: isCreatingConversation } = useCreateConversation()
 
-  const { mutate: runCreateConversation, isPending: isCreatingConversation } =
-    useCreateConversation()
-
+  // reset all state when dialog closes
   React.useEffect(() => {
     if (!open) {
+      setMode("direct")
       setSelectedId(null)
+      setSelectedIds(new Set())
+      setGroupName("")
     }
   }, [open])
 
   const users = data?.users ?? []
-  const selectedUser =
-    selectedId === null
-      ? null
-      : users.find((u) => u.id === selectedId) ?? null
+
+  function toggleGroupMember(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
 
   function handleStart() {
-    if (!selectedUser) return
-    const memberId = Number.parseInt(selectedUser.id, 10)
-    if (!Number.isFinite(memberId)) {
-      notifyError("Could not start chat for this member. Please try again.")
-      return
-    }
-    runCreateConversation(
-      { type: "DIRECT", memberIds: [memberId] },
-      {
-        onSuccess: () => {
-          onStartChat?.(selectedUser)
-          onOpenChange(false)
+    if (mode === "direct") {
+      if (!selectedId) return
+      const user = users.find((u) => u.id === selectedId)
+      const memberId = Number.parseInt(selectedId, 10)
+      if (!Number.isFinite(memberId)) {
+        notifyError("Could not start chat for this member. Please try again.")
+        return
+      }
+      runCreateConversation(
+        { type: "DIRECT", memberIds: [memberId] },
+        {
+          onSuccess: () => {
+            if (user) onStartChat?.(user)
+            onOpenChange(false)
+          },
         },
-      },
-    )
+      )
+    } else {
+      const trimmedName = groupName.trim()
+      if (!trimmedName) {
+        notifyError("Please enter a group name.")
+        return
+      }
+      if (selectedIds.size < 2) {
+        notifyError("Select at least 2 members for a group.")
+        return
+      }
+      const memberIds = [...selectedIds].map((id) => Number.parseInt(id, 10))
+      runCreateConversation(
+        { type: "GROUP", name: trimmedName, memberIds },
+        { onSuccess: () => onOpenChange(false) },
+      )
+    }
   }
+
+  const canStart =
+    mode === "direct"
+      ? selectedId !== null
+      : groupName.trim().length > 0 && selectedIds.size >= 2
+
+  const buttonLabel = isCreatingConversation
+    ? mode === "direct" ? "Starting…" : "Creating…"
+    : mode === "direct" ? "Start" : "Create group"
 
   return (
     <AppModal.Root variant="dialog" open={open} onOpenChange={onOpenChange}>
@@ -169,32 +198,78 @@ export function MembersDialog({
         className="flex max-h-[min(92vh,48rem)] min-h-[min(58vh,28rem)] w-[calc(100%-2rem)] max-w-lg flex-col p-0 sm:p-0"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
+        {/* header */}
         <div className="shrink-0 border-b border-border/80 bg-gradient-to-br from-primary/[0.07] via-transparent to-transparent px-4 py-3 sm:px-5">
           <div className="flex items-start gap-2.5">
             <div
-              className={cn(
-                "flex size-10 shrink-0 items-center justify-center rounded-xl",
-                "bg-primary/12 text-primary ring-1 ring-primary/20",
-              )}
+              className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary ring-1 ring-primary/20"
               aria-hidden
             >
               <Users className="size-[1.125rem]" strokeWidth={2} />
             </div>
             <div className="min-w-0 flex-1">
               <AppModal.Title className="text-base font-semibold sm:text-lg">
-                Members
+                New conversation
               </AppModal.Title>
               <AppModal.Description className="mt-0.5 text-xs leading-snug sm:text-sm">
-                Pick someone to start a conversation. You can change this later.
+                Start a direct message or create a group.
               </AppModal.Description>
             </div>
           </div>
+
+          {/* mode toggle */}
+          <div className="mt-3 flex gap-2">
+            <button
+              type="button"
+              onClick={() => setMode("direct")}
+              className={cn(
+                "flex-1 rounded-lg border py-1.5 text-xs font-medium transition-colors",
+                mode === "direct"
+                  ? "border-primary/40 bg-primary/10 text-primary"
+                  : "border-border bg-transparent text-muted-foreground hover:text-foreground",
+              )}
+            >
+              Direct message
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("group")}
+              className={cn(
+                "flex-1 rounded-lg border py-1.5 text-xs font-medium transition-colors",
+                mode === "group"
+                  ? "border-primary/40 bg-primary/10 text-primary"
+                  : "border-border bg-transparent text-muted-foreground hover:text-foreground",
+              )}
+            >
+              New group
+            </button>
+          </div>
         </div>
 
+        {/* group name input */}
+        {mode === "group" && (
+          <div className="shrink-0 border-b border-border/60 px-4 py-3 sm:px-5">
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+              Group name
+            </label>
+            <input
+              type="text"
+              placeholder="Enter group name…"
+              value={groupName}
+              onChange={(e) => setGroupName(e.target.value)}
+              maxLength={80}
+              className={INPUT_CLASSES}
+              autoComplete="off"
+            />
+          </div>
+        )}
+
+        {/* member list */}
         <div
           className="min-h-0 flex-1 overflow-y-auto px-4 py-3 sm:px-5"
           role="listbox"
           aria-label="Team members"
+          aria-multiselectable={mode === "group"}
         >
           {isPending ? <MembersListSkeleton /> : null}
 
@@ -211,18 +286,34 @@ export function MembersDialog({
 
           {!isPending && !isError && users.length > 0 ? (
             <div className="flex flex-col gap-2">
-              {users.map((user) => (
-                <MemberUserCard
-                  key={user.id}
-                  user={user}
-                  selected={user.id === selectedId}
-                  onSelect={() => setSelectedId(user.id)}
-                />
-              ))}
+              {mode === "group" && selectedIds.size > 0 && (
+                <p className="mb-1 text-xs text-muted-foreground">
+                  {selectedIds.size} member{selectedIds.size !== 1 ? "s" : ""} selected
+                  {selectedIds.size < 2 ? " — select at least 2" : ""}
+                </p>
+              )}
+              {users.map((user) =>
+                mode === "direct" ? (
+                  <MemberUserCard
+                    key={user.id}
+                    user={user}
+                    selected={user.id === selectedId}
+                    onSelect={() => setSelectedId(user.id)}
+                  />
+                ) : (
+                  <MemberUserCard
+                    key={user.id}
+                    user={user}
+                    selected={selectedIds.has(user.id)}
+                    onSelect={() => toggleGroupMember(user.id)}
+                  />
+                ),
+              )}
             </div>
           ) : null}
         </div>
 
+        {/* footer */}
         <div className="flex shrink-0 items-center justify-end gap-2 border-t border-border px-4 py-2.5 sm:px-5">
           <AppModal.Dismiss asChild>
             <SecondaryButton type="button" className="rounded-xl sm:min-w-24">
@@ -233,11 +324,11 @@ export function MembersDialog({
             type="button"
             variant="default"
             size="default"
-            disabled={!selectedUser || isCreatingConversation}
-            className="min-w-[6.5rem] rounded-xl shadow-sm"
+            disabled={!canStart || isCreatingConversation}
+            className="min-w-[7rem] rounded-xl shadow-sm"
             onClick={handleStart}
           >
-            {isCreatingConversation ? "Creating…" : "Start"}
+            {buttonLabel}
           </BaseButton>
         </div>
       </AppModal.Content>

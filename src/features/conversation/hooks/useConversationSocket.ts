@@ -10,16 +10,41 @@ import { queryClient } from "@/lib/queryClient"
 import { conversationKeys } from "../conversation.cache"
 import type { FetchMessagesResponseData, Message } from "../conversation.types"
 
+type StatusUpdatePayload = {
+  messageId: number
+  conversationId: number
+  status: Message["status"]
+}
+
+function aggregateStatus(statuses: Array<{ statusType: string }>): Message["status"] {
+  if (statuses.some((s) => s.statusType === "PENDING")) return "PENDING"
+  if (statuses.some((s) => s.statusType === "DELIVERED")) return "DELIVERED"
+  return "READ"
+}
+
 function normalizeSocketMessage(data: Record<string, unknown>, loggedInUserId: number): Message {
   const statuses = data.messageStatuses as Array<{ recipientId: number; statusType: string }> | undefined
-  const myStatus = statuses?.find((s) => s.recipientId === loggedInUserId) ?? statuses?.[0]
+  const isSentByMe = data.senderId === loggedInUserId
+
+  let status: Message["status"]
+  let recipientId: number
+
+  if (isSentByMe) {
+    status = statuses && statuses.length > 0 ? aggregateStatus(statuses) : "PENDING"
+    recipientId = statuses?.find((s) => s.recipientId !== loggedInUserId)?.recipientId ?? loggedInUserId
+  } else {
+    const myStatus = statuses?.find((s) => s.recipientId === loggedInUserId) ?? statuses?.[0]
+    status = (myStatus?.statusType ?? "READ") as Message["status"]
+    recipientId = myStatus?.recipientId ?? loggedInUserId
+  }
+
   return {
     id: data.id as number,
     content: data.content as string,
     conversationId: data.conversationId as number,
     senderId: data.senderId as number,
-    recipientId: myStatus?.recipientId ?? loggedInUserId,
-    status: (myStatus?.statusType ?? "READ") as Message["status"],
+    recipientId,
+    status,
     createdAt: data.createdAt as string,
     updatedAt: data.updatedAt as string,
   }
@@ -32,6 +57,18 @@ function appendMessageToCache(conversationId: number, message: Message) {
       if (!old) return old
       if (old.messages.some((m) => m.id === message.id)) return old
       return { messages: [...old.messages, message] }
+    },
+  )
+}
+
+function updateMessageStatusInCache(conversationId: number, messageId: number, status: Message["status"]) {
+  queryClient.setQueryData(
+    conversationKeys.messagesList({ conversationId }),
+    (old: FetchMessagesResponseData | undefined) => {
+      if (!old) return old
+      return {
+        messages: old.messages.map((m) => (m.id === messageId ? { ...m, status } : m)),
+      }
     },
   )
 }
@@ -88,14 +125,20 @@ export function useConversationSocket(conversationId: number) {
       }
     }
 
+    const handleStatusUpdate = ({ messageId, conversationId: convId, status }: StatusUpdatePayload) => {
+      updateMessageStatusInCache(convId, messageId, status)
+    }
+
     socket.on("connect", handleConnect)
     socket.on("message:new", handleNewMessage)
     socket.on("message:pending", handlePendingMessages)
+    socket.on("message:status_update", handleStatusUpdate)
 
     return () => {
       socket.off("connect", handleConnect)
       socket.off("message:new", handleNewMessage)
       socket.off("message:pending", handlePendingMessages)
+      socket.off("message:status_update", handleStatusUpdate)
       if (socket.connected) {
         socket.emit("conversation:leave", { conversationId })
       }

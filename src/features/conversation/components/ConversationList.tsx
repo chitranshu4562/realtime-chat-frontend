@@ -65,7 +65,7 @@ export function ConversationList({
   return (
     <aside
       className={cn(
-        "flex min-h-0 min-w-0 w-full flex-1 flex-col border-b border-border bg-card/25 md:grow-0 md:shrink md:basis-72 md:max-w-sm md:min-w-0 md:border-b-0 md:border-r",
+        "flex min-h-0 min-w-0 w-full flex-1 flex-col border-b border-border bg-card/25 md:grow-0 md:shrink-0 md:basis-56 md:border-b-0 md:border-r",
         className,
       )}
       aria-label="Conversations"

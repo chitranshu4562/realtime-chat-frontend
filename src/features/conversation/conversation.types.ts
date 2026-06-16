@@ -1,6 +1,6 @@
 export type ConversationType = 'DIRECT' | 'GROUP';
 
-export type MessageStatus = 'PENDING' | 'READ';
+export type MessageStatus = 'PENDING' | 'DELIVERED' | 'READ';
 
 export type ConversationMember = {
     id: number;
@@ -11,6 +11,7 @@ export type ConversationMember = {
 export type Conversation = {
     id: number;
     type: ConversationType;
+    name: string | null;
     members: ConversationMember[];
     createdAt: string;
     updatedAt: string;
@@ -29,6 +30,7 @@ export type Message = {
 
 export type CreateConversationRequestBody = {
     type: ConversationType;
+    name?: string;
     memberIds: number[];
 }
 
@@ -50,3 +52,24 @@ export type FetchMessagesQueryParams = {
 export type FetchMessagesResponseData = {
     messages: Message[];
 }
+
+export type MessageRecipientStatus = {
+    recipientId: number;
+    recipientName: string | null;
+    statusType: MessageStatus;
+    updatedAt: string;
+}
+
+export type MessageDetails = {
+    id: number;
+    content: string;
+    createdAt: string;
+    sender: { id: number; name: string | null };
+    statuses: MessageRecipientStatus[];
+}
+
+export type FetchMessageDetailsQueryParams = {
+    messageId: number;
+}
+
+export type FetchMessageDetailsResponseData = MessageDetails;

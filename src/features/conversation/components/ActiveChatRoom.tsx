@@ -1,4 +1,5 @@
 import { AlertCircle, Loader2 } from "lucide-react"
+import { useEffect, useRef } from "react"
 
 import { SecondaryButton } from "@/components/ui/secondary-button"
 import { useAuthStore } from "@/features/auth/store/useAuthStore"
@@ -61,12 +62,23 @@ export function ActiveChatRoom({ conversation, className }: ActiveChatRoomProps)
     refetch,
   } = useFetchMessages({ conversationId: conversation.id })
 
-  const member = conversation.members.find((m) => !m.isAdmin)
-
-  const title = member?.name.trim() || `Conversation ${conversation.id}`
+  const title =
+    conversation.type === "GROUP"
+      ? (conversation.name?.trim() || "Group")
+      : (conversation.members.find((m) => m.id !== currentUserNumericId)?.name?.trim() || `Conversation ${conversation.id}`)
 
   const messages = data?.messages ?? []
   const messageCount = messages.length
+
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const prevConversationId = useRef(conversation.id)
+
+  useEffect(() => {
+    if (!bottomRef.current || messageCount === 0) return
+    const behavior = prevConversationId.current !== conversation.id ? "instant" : "smooth"
+    prevConversationId.current = conversation.id
+    bottomRef.current.scrollIntoView({ behavior, block: "end" })
+  }, [conversation.id, messageCount])
 
   return (
     <section
@@ -123,6 +135,7 @@ export function ActiveChatRoom({ conversation, className }: ActiveChatRoomProps)
               }
             />
           ))}
+          <div ref={bottomRef} />
         </div>
       ) : null}
 
