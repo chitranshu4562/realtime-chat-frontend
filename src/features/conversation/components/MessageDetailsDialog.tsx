@@ -1,5 +1,4 @@
 import { Check, CheckCheck, Clock, Loader2, AlertCircle } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { AppModal } from "@/components/ui/app-modal"
 import { useFetchMessageDetails } from "../hooks/useFetchMessageDetails"
 import type { MessageStatus } from "../conversation.types"

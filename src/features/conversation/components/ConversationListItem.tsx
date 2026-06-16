@@ -28,7 +28,7 @@ export function ConversationListItem({
   const title =
     conversation.type === "GROUP"
       ? (conversation.name?.trim() || "Group")
-      : (conversation.members.find((m) => m.id !== loggedInUserId)?.name?.trim() || `Conversation ${conversation.id}`)
+      : (conversation.members.find((m) => String(m.id) !== loggedInUserId)?.name?.trim() || `Conversation ${conversation.id}`)
 
   return (
     <button
