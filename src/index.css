@@ -434,7 +434,7 @@
   html,
   body,
   #root {
-    @apply h-screen overflow-hidden;
+    @apply h-dvh overflow-hidden;
   }
 
   body {
