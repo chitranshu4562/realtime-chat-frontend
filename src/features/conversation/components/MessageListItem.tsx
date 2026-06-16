@@ -59,7 +59,7 @@ export function MessageListItem({ message, isSent }: MessageListItemProps) {
                 aria-label="Message options"
                 className={cn(
                   "mb-1 flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-opacity",
-                  "opacity-0 group-hover:opacity-100 focus-visible:opacity-100",
+                  "opacity-0 group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100",
                   menuOpen && "opacity-100",
                 )}
               >
@@ -120,7 +120,7 @@ export function MessageListItem({ message, isSent }: MessageListItemProps) {
                 aria-label="Message options"
                 className={cn(
                   "mb-1 flex size-6 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-opacity",
-                  "opacity-0 group-hover:opacity-100 focus-visible:opacity-100",
+                  "opacity-0 group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100",
                   menuOpen && "opacity-100",
                 )}
               >
